@@ -29,9 +29,10 @@ sub new {
 
     if (!$startCommand) {
         # !!! merge with qemu-vm.nix.
+        # note: e1000 is used instead of virtio because networking stops working under higher load (hydra slaves)
         $startCommand =
             "qemu-kvm -m 384 " .
-            "-net nic,model=virtio \$QEMU_OPTS ";
+            "-net nic,model=e1000 \$QEMU_OPTS ";
         my $iface = $args->{hdaInterface} || "virtio";
         $startCommand .= "-drive file=" . Cwd::abs_path($args->{hda}) . ",if=$iface,boot=on,werror=report "
             if defined $args->{hda};

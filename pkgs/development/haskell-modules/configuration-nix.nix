@@ -1333,8 +1333,19 @@ builtins.intersectAttrs super {
   hercules-ci-cnix-store =
     overrideCabal
       (old: {
+        version = "0.4.0.0";
+        src = pkgs.fetchFromGitHub {
+          owner = "hercules-ci";
+          repo = "hercules-ci-agent";
+          rev = "fddb4ecbc76339982764d1b112aa46cdb556d1da";
+          hash = "sha256-LG196LNPWnOgsYZ0qvGS9AydBVqPY+2d05VY/zeeWHo=";
+        };
+        postUnpack = "sourceRoot=$sourceRoot/${old.pname}";
+        postPatch = ''
+          sed -i '/<gc/d' src/Hercules/CNix.hs
+        '';
         passthru = old.passthru or { } // {
-          nixPackage = pkgs.nixVersions.nix_2_28;
+          nixPackage = pkgs.nixVersions.nixComponents_2_28.nix-store;
         };
       })
       (

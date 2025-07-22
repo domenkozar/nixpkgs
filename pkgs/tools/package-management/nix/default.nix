@@ -183,6 +183,18 @@ lib.makeExtensible (
         self_attribute_name = "nix_2_24";
       };
 
+      nixComponents_2_28 = nixDependencies.callPackage ./modular/packages.nix {
+        version = "2.28.4";
+        inherit (self.nix_2_24.meta) maintainers teams;
+        otherSplices = generateSplicesForNixComponents "nixComponents_2_28";
+        src = fetchFromGitHub {
+          owner = "NixOS";
+          repo = "nix";
+          rev = "2.28.4";
+          hash = "sha256-V1tPrBkPteqF8VWUgpotNFYJ2Xm6WmB3aMPexuEHl9I=";
+        };
+      };
+
       nix_2_28 = commonMeson {
         version = "2.28.4";
         hash = "sha256-V1tPrBkPteqF8VWUgpotNFYJ2Xm6WmB3aMPexuEHl9I=";

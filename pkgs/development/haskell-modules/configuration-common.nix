@@ -634,6 +634,9 @@ with haskellLib;
           hash = "sha256-R0W7uAg+BLoHjMRMQ8+oiSbTq8nkGz5RDpQ+ZfxxP3A=";
         };
         postUnpack = "sourceRoot=$sourceRoot/cachix";
+        postPatch = ''
+          sed -i 's/nix-main, //' cachix.cabal
+        '';
       })
       (
         lib.pipe

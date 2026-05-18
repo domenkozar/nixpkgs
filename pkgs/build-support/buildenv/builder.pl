@@ -160,7 +160,7 @@ sub findFiles($relName, $target, $baseName, $ignoreCollisions, $checkCollisionCo
         # If target is a dangling symlink, emit a warning.
         if (-l $target && ! -e $target) {
             my $link = readlink $target;
-            warn "creating dangling symlink `$out$extraPrefix/$relName' -> `$target' -> `$link'\n";
+            warn "creating dangling symlink `$out$extraPrefix$relName' -> `$target' -> `$link'\n";
         }
         $symlinks{$relName} = [$target, $priority];
         return;
@@ -282,7 +282,11 @@ if ($extraPathsFrom) {
 my $nrLinks = 0;
 foreach my $relName (sort keys %symlinks) {
     my ($target, $priority) = @{$symlinks{$relName}};
-    my $abs = "$out" . "$extraPrefix" . "/$relName";
+    # $relName is either empty (for the root) or starts with "/". Combining
+    # the parts directly avoids producing paths with consecutive slashes like
+    # "$out//library", which Perl's mkdir(2) rejects on Darwin with ENOENT
+    # even though POSIX treats them as equivalent to "/".
+    my $abs = "$out" . "$extraPrefix" . "$relName";
     next unless isInPathsToLink $relName;
     if ($target eq "") {
         #print "creating directory $relName\n";
